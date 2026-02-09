@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Apply for {{ job.title }}</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Upload Resume (PDF/DOC):</label><br><br>
+    <input type="file" name="resume" required><br><br>
+
+    <button type="submit">Submit Application</button>
+</form>
+
+{% endblock %}

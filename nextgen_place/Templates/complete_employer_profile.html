@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== Employer Profile Card ===== */
+.employer-profile-card {
+    max-width: 650px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 35px 30px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.employer-profile-card h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #0d47a1;
+    font-size: 24px;
+}
+
+/* ===== Input Group ===== */
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group span {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 14px 12px 44px;
+    font-size: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 8px rgba(25,118,210,0.4);
+}
+
+/* ===== Save Button ===== */
+.save-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(25,118,210,0.4);
+}
+
+/* ===== Error & Warning Boxes ===== */
+.error-box {
+    background: #fdecea;
+    color: #b00020;
+    padding: 14px;
+    margin-top: 18px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.warning-box {
+    background: #fff3cd;
+    color: #856404;
+    padding: 14px;
+    margin-top: 18px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.warning-box ul {
+    margin-top: 8px;
+    padding-left: 18px;
+}
+</style>
+
+<div class="employer-profile-card">
+
+    <h2>🏢 Complete Employer Profile</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Company Name -->
+        <div class="input-group">
+            <span>🏢</span>
+            <input type="text"
+                   name="company_name"
+                   placeholder="Company Name"
+                   value="{{ profile.company_name }}"
+                   required>
+        </div>
+
+        <!-- Company Email -->
+        <div class="input-group">
+            <span>📧</span>
+            <input type="email"
+                   name="company_email"
+                   placeholder="Company Email"
+                   value="{{ profile.company_email }}"
+                   required>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="input-group">
+            <span>📞</span>
+            <input type="text"
+                   name="phone_number"
+                   placeholder="Phone Number"
+                   value="{{ profile.phone_number }}"
+                   pattern="[0-9]{10}"
+                   title="Enter a valid 10-digit phone number"
+                   required>
+        </div>
+
+        <!-- Location -->
+        <div class="input-group">
+            <span>📍</span>
+            <input type="text"
+                   name="location"
+                   placeholder="Company Location"
+                   value="{{ profile.location }}"
+                   required>
+        </div>
+
+        <!-- Website -->
+        <div class="input-group">
+            <span>🌐</span>
+            <input type="url"
+                   name="company_website"
+                   placeholder="Company Website URL"
+                   value="{{ profile.company_website }}"
+                   required>
+        </div>
+
+        <button type="submit" class="save-btn">
+            💾 Save Profile
+        </button>
+    </form>
+
+    <!-- 🔴 HARD ERROR -->
+    {% if error %}
+    <div class="error-box">
+        ❌ <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- 🟠 SOFT DUPLICATE WARNING -->
+    {% if duplicate_warning %}
+    <div class="warning-box">
+        ⚠ <strong>Duplicate Company Warning</strong><br>
+        Similar companies already exist:
+        <ul>
+            {% for name in duplicate_warning %}
+                <li>{{ name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    
+.upload-container {
+    max-width: 520px;
+    margin: 60px auto;
+    background: #ffffff;
+    padding: 35px 30px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.upload-container h2 {
+    font-size: 26px;
+    color: #0d47a1;
+    margin-bottom: 12px;
+}
+
+.upload-desc {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Custom file upload */
+.file-label {
+    display: block;
+    padding: 16px;
+    border: 2px dashed #90caf9;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #1976d2;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.file-label:hover {
+    background: #e3f2fd;
+    border-color: #1976d2;
+    transform: scale(1.02);
+}
+
+.file-label input {
+    display: none;
+}
+
+.file-hint {
+    font-size: 13px;
+    color: #777;
+}
+
+.file-name {
+    font-size: 14px;
+    color: #555;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+/* Upload button */
+.upload-btn {
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(25,118,210,0.4);
+}
+
+.upload-btn:active {
+    transform: scale(0.97);
+}
+</style>
+<div class="upload-container">
+    <h2>📄 Upload Your Resume</h2>
+
+    <p class="upload-desc">
+        Upload your resume to receive
+        <strong>AI-based job recommendations</strong>
+        tailored to your skills.
+    </p>
+
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+        {% csrf_token %}
+
+        <label class="file-label">
+            📎 Choose Resume File
+        <input type="file"
+           name="resume"
+           accept=".pdf,.doc,.docx"
+           required
+           onchange="showFileName(this)">
+        </label>
+
+        <!-- File name display -->
+        <p id="file-name" class="file-name">
+            No file selected
+        </p>
+
+        
+        <button type="submit" class="upload-btn">
+            🚀 Upload Resume
+        </button>
+    </form>
+</div>
+
+<script>
+function showFileName(input) {
+    const fileNameElement = document.getElementById("file-name");
+
+    if (input.files && input.files.length > 0) {
+        fileNameElement.textContent = "📄 " + input.files[0].name;
+    } else {
+        fileNameElement.textContent = "No file selected";
+    }
+}
+</script>
+
+{% endblock %}

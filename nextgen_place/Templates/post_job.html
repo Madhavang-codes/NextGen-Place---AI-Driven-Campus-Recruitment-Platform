@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    /* =================POST_JOB FORM LAYOUT ================= */
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 80px 40px;
+}
+
+.form-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 680px;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+/* ================= HEADINGS ================= */
+.form-title {
+    text-align: center;
+    font-size: 26px;
+    color: #0d47a1;
+    margin-bottom: 8px;
+}
+
+.form-subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* ================= INPUT GROUP ================= */
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group span {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 12px 14px 12px 44px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-group textarea {
+    resize: none;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 6px rgba(25,118,210,0.4);
+}
+
+/* ================= HINT TEXT ================= */
+.hint-text {
+    display: block;
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 20px;
+    margin-left: 4px;
+}
+
+/* ================= BUTTONS ================= */
+.button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 25px;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+.btn-outline {
+    border: 2px solid #1976d2;
+    color: #1976d2;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: #1976d2;
+    color: white;
+}
+</style>
+
+<div class="form-wrapper">
+
+    <div class="form-card">
+
+        <h2 class="form-title">🏢 Post New Job</h2>
+        <p class="form-subtitle">
+            Fill in the details below to post a new job opening
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Job Title -->
+            <div class="input-group">
+                <span>💼</span>
+                <input type="text"
+                       name="title"
+                       placeholder="Job Title"
+                       required>
+            </div>
+
+            <!-- Salary -->
+            <div class="input-group">
+                <span>💰</span>
+                <input type="text"
+                       name="salary"
+                       placeholder="Salary (e.g. ₹25,000 / Month)"
+                       required>
+            </div>
+
+            <!-- Job Description -->
+            <div class="input-group textarea-group">
+                <span>📝</span>
+                <textarea name="description"
+                          placeholder="Job Description  
+                        Please add this at end of description:
+                        Job Type: Full Time / Part Time / Internship
+                        Work Mode: Onsite / Remote / Hybrid"
+                          required></textarea>
+            </div>
+
+            <!-- Required Skills -->
+            <div class="input-group">
+                <span>🧠</span>
+                <input type="text"
+                       name="skills_required"
+                       placeholder="Python, Django, SQL, HTML"
+                       required>
+            </div>
+            <small class="hint-text">
+                Enter skills separated by commas
+            </small>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn-primary">
+                    📤 Post Job
+                </button>
+
+                <a href="{% url 'employer_dashboard' %}" class="btn-outline">
+                    🔙 Back
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirm Delete</h2>
+
+<p>
+Are you sure you want to delete student:
+<b>{{ student.user.username }}</b> ?
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" style="color:white; background:red;">
+        Yes, Delete
+    </button>
+    <a href="{% url 'admin_dashboard' %}">Cancel</a>
+</form>
+
+{% endblock %}

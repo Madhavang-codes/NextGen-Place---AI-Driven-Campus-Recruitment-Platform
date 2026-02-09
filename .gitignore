@@ -1,0 +1,17 @@
+# Virtual Environment
+.venv/
+Final/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# SQL dump files
+*.sql
+
+# Media
+media/

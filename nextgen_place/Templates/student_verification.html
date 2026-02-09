@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Verification</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+
+            box-sizing: border-box; /* ✅ FIX */
+        }
+
+        .input-group input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 5px rgba(79, 172, 254, 0.6);
+        }
+
+        .input-group span {
+            position: absolute;
+            left: 12px;         
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 17px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>🎓 Student Verification Form</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="input-group">
+            <input type="text" name="register_number" placeholder="Register Number" required>
+            <span>🆔</span>
+        </div>
+
+        <div class="input-group">
+            <input type="text" name="full_name" placeholder="Full Name" required>
+            <span>👤</span>
+        </div>
+
+        <div class="input-group">
+            <input type="text" name="department" placeholder="Department" required>
+            <span>🏫</span>
+        </div>
+
+        <div class="input-group">
+            <input type="text" name="academic_year" placeholder="Academic Year (e.g. 2024-2026)" required>
+            <span>📅</span>
+        </div>
+
+        <div class="input-group">
+            <input type="email" name="student_email" placeholder="Student Email" required>
+            <span>📧</span>
+        </div>
+
+        <button type="submit">Submit Details</button>
+    </form>
+</div>
+
+</body>
+</html>

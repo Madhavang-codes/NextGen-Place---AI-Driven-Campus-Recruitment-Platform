@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    /* ================= VIEW_APPLICANTS PAGE LAYOUT ================= */
+.page-container {
+    padding: 30px;
+}
+
+.page-title {
+    font-size: 26px;
+    color: #0d47a1;
+    margin-bottom: 8px;
+}
+
+.page-title span {
+    color: #1976d2;
+}
+
+.company-name {
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: #444;
+}
+
+/* ================= TABLE CARD ================= */
+/* ================= TABLE CLARITY FIX ================= */
+
+/* Table container */
+.app-table {
+    width: 100%;
+    border-collapse: separate;   /* IMPORTANT */
+    border-spacing: 0;
+    font-size: 14px;
+    background: #ffffff;
+}
+
+/* Header */
+.app-table thead th {
+    background: linear-gradient(135deg, #1976d2, #1e88e5);
+    color: #fff;
+    padding: 14px;
+    font-weight: 600;
+    border-right: 1px solid rgba(255,255,255,0.3);
+}
+
+.app-table thead th:last-child {
+    border-right: none;
+}
+
+/* Body cells */
+.app-table tbody td {
+    padding: 14px;
+    border-right: 1px solid #e0e0e0;   /* vertical lines */
+    border-bottom: 1px solid #e0e0e0;  /* horizontal lines */
+    vertical-align: middle;
+}
+
+.app-table tbody td:last-child {
+    border-right: none;
+}
+
+/* Alternate row color (zebra rows) */
+.app-table tbody tr:nth-child(even) {
+    background: #f8fbff;
+}
+
+/* Hover highlight */
+.app-table tbody tr:hover {
+    background: #e3f2fd;
+}
+
+/* Strong separation for first column (Student) */
+.app-table tbody td:first-child {
+    font-weight: 600;
+    color: #0d47a1;
+}
+
+/* Fake resume warning */
+.fake-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 8px;
+    background: #fdecea;
+    color: #b00020;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* Status alignment */
+.status {
+    display: inline-block;
+    min-width: 90px;
+    text-align: center;
+}
+
+/* Action buttons spacing */
+.app-table td:last-child {
+    min-width: 180px;
+}
+
+/* ================= STATUS BADGES ================= */
+.status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status.rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.fake-badge {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #b00020;
+    font-weight: bold;
+}
+
+/* ================= BUTTONS ================= */
+.btn {
+    padding: 7px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn.approve {
+    background: #2e7d32;
+    color: white;
+}
+
+.btn.reject {
+    background: #d32f2f;
+    color: white;
+}
+
+.btn.confirm-reject {
+    background: #b00020;
+    color: white;
+    margin-top: 6px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.btn.disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* ================= LINKS ================= */
+.link-btn {
+    color: #1976d2;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.link-btn:hover {
+    text-decoration: underline;
+}
+
+/* ================= REJECT BOX ================= */
+.reject-box {
+    display: none;
+    margin-top: 8px;
+}
+
+.reject-box textarea {
+    width: 100%;
+    border-radius: 6px;
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+/* ================= STATUS GUIDE ================= */
+.status-guide {
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+/* ================= BACK BUTTON ================= */
+.back-btn-container {
+    margin-top: 30px;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 25px;
+    border: 2px solid #1976d2;
+    color: #1976d2;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #1976d2;
+    color: white;
+}
+</style>
+
+<div class="page-container">
+
+    <h2 class="page-title">📄 Applicants for <span>{{ job.title }}</span></h2>
+
+    <p class="company-name">
+        🏢 <strong>Company:</strong> {{ job.employer.company_name }}
+    </p>
+
+    <div class="table-card">
+
+    {% if applications %}
+    <table class="app-table">
+        <thead>
+            <tr>
+                <th>👨‍🎓 Student</th>
+                <th>📅 Applied Date</th>
+                <th>📄 Resume</th>
+                <th>📌 Status</th>
+                <th>⚙ Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for app in applications %}
+            <tr>
+
+                <!-- STUDENT -->
+                <td>
+                    <strong>{{ app.user.username }}</strong>
+
+                    {% if app.user.student_profile.is_resume_fake %}
+                        <div class="fake-badge">
+                            ⚠ Suspected Fake Resume
+                        </div>
+                    {% endif %}
+                </td>
+
+                <!-- DATE -->
+                <td>{{ app.applied_date|date:"d M Y" }}</td>
+
+                <!-- RESUME -->
+                <td>
+                    {% if app.user.student_profile.resume %}
+                        <a href="{{ app.user.student_profile.resume.url }}" target="_blank" class="link-btn">
+                            👁 View
+                        </a>
+                        |
+                        <a href="{{ app.user.student_profile.resume.url }}" download class="link-btn">
+                            ⬇ Download
+                        </a>
+                    {% else %}
+                        <span class="muted-text">Not uploaded</span>
+                    {% endif %}
+                </td>
+
+                <!-- STATUS -->
+                <td>
+                    {% if app.status == 'pending' %}
+                        <span class="status pending">⏳ Pending</span>
+                    {% elif app.status == 'approved' %}
+                        <span class="status approved">✅ Approved</span>
+                    {% else %}
+                        <span class="status rejected">❌ Rejected</span>
+                    {% endif %}
+                </td>
+
+                <!-- ACTION -->
+                <td>
+
+                {% if app.status == 'pending' %}
+
+                    {% if app.user.student_profile.is_resume_fake %}
+                        <button class="btn disabled" disabled>
+                            🚫 Approve Disabled
+                        </button>
+                    {% else %}
+                        <a href="{% url 'approve_application' app.id %}">
+                            <button class="btn approve">
+                                ✅ Approve
+                            </button>
+                        </a>
+                    {% endif %}
+
+                    <br><br>
+
+                    <button class="btn reject"
+                            onclick="document.getElementById('reject-box-{{ app.id }}').style.display='block'">
+                        ❌ Reject
+                    </button>
+
+                    <!-- INLINE REJECT FORM -->
+                    <div id="reject-box-{{ app.id }}" class="reject-box">
+                        <form method="post" action="{% url 'reject_application' app.id %}">
+                            {% csrf_token %}
+                            <textarea name="reason"
+                                      rows="3"
+                                      placeholder="Enter rejection reason"
+                                      required></textarea>
+
+                            <button type="submit" class="btn confirm-reject">
+                                Confirm Rejection
+                            </button>
+                        </form>
+                    </div>
+
+                {% else %}
+                    —
+                {% endif %}
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+        <p class="muted-text">No applications yet.</p>
+    {% endif %}
+
+    </div>
+
+    <!-- STATUS GUIDE -->
+    <div class="status-guide">
+        <h4>ℹ Application Status Guide</h4>
+        <ul>
+            <li><span class="status pending">⏳ Pending</span> – Awaiting employer decision</li>
+            <li><span class="status approved">✅ Approved</span> – Candidate shortlisted</li>
+            <li><span class="status rejected">❌ Rejected</span> – Candidate not selected</li>
+            <li><span class="fake-badge">⚠ Fake Resume</span> – Approval blocked</li>
+        </ul>
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div class="back-btn-container">
+        <a href="{% url 'employer_dashboard' %}" class="back-btn">
+            🔙 Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

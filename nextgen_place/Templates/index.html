@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero">
+    <h2>🚀 Welcome to <span style="color:#1976d2;">JJC Placement Portal 🚀</span></h2>
+
+    <p>
+        Connecting <strong>students</strong>, <strong>employers</strong>, and
+        <strong>colleges</strong> through intelligent recruitment.
+    </p>
+
+    <div class="hero-buttons">
+        <a href="/register/" class="btn">Get Started</a>
+
+        <a href="/jobs/" class="btn-outline">View Jobs</a>
+
+        <!-- ADMIN LOGIN (design only) -->
+        <a href="/admin-login/"
+           class="btn-outline admin-btn">
+            Admin Login
+        </a>
+    </div>
+</section>
+
+<!-- ================= FEATURES SECTION ================= -->
+<section class="features">
+
+    <!-- STUDENTS -->
+    <div class="card">
+        <h3>🎓 For Students</h3>
+        <p>
+            Apply for internships and jobs using
+            <strong>AI-based job recommendations</strong>
+            tailored to your resume.
+        </p>
+    </div>
+
+    <!-- EMPLOYERS -->
+    <div class="card">
+        <h3>🏢 For Employers</h3>
+        <p>
+            Post job openings, manage applications,
+            and <strong>shortlist verified candidates</strong>
+            efficiently.
+        </p>
+    </div>
+
+    <!-- COLLEGES -->
+    <div class="card">
+        <h3>🏫 For Colleges</h3>
+        <p>
+            Monitor placement statistics, manage departments,
+            and track <strong>student recruitment performance</strong>.
+        </p>
+    </div>
+
+</section>
+
+{% endblock %}

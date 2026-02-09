@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* ================= DASHBOARD ================= */
+.dashboard-container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    color: #0d47a1;
+    margin-bottom: 5px;
+}
+
+.welcome-text {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* ================= WARNING ================= */
+.warning-box {
+    background: #fff3f3;
+    border-left: 6px solid #e53935;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.warning-box h3 {
+    color: #d32f2f;
+}
+
+.warning-note {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.danger-btn {
+    background: #e53935;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.danger-btn:hover {
+    background: #c62828;
+}
+
+/* ================= SECTIONS ================= */
+.section-title {
+    margin: 30px 0 15px;
+    color: #1976d2;
+}
+
+/* ================= JOB GRID ================= */
+.job-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.job-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.job-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+}
+
+.job-card h4 {
+    color: #0d47a1;
+    margin-bottom: 6px;
+}
+
+.company {
+    font-weight: 600;
+    color: #333;
+}
+
+.job-meta {
+    color: #555;
+    font-size: 14px;
+}
+
+/* ================= SKILLS ================= */
+.skills {
+    margin: 12px 0;
+}
+
+.skill-tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #0d47a1;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin: 4px 4px 0 0;
+}
+
+.no-skill {
+    color: #999;
+}
+
+/* ================= BUTTONS ================= */
+.apply-btn {
+    margin-top: 10px;
+    background: #1976d2;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.apply-btn:hover {
+    background: #0d47a1;
+}
+
+/* ================= APPLIED JOBS ================= */
+.applied-list {
+    margin-top: 15px;
+}
+
+.applied-card {
+    background: #fafafa;
+    border-left: 5px solid #ccc;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+/* ================= STATUS ================= */
+.status {
+    font-weight: bold;
+}
+
+.approved {
+    color: green;
+}
+
+.rejected {
+    color: red;
+}
+
+.pending {
+    color: orange;
+}
+
+/* ================= LEGEND ================= */
+.legend {
+    margin-top: 30px;
+    background: #f5f9ff;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.legend ul {
+    padding-left: 20px;
+}
+
+.muted-text {
+    color: #777;
+}
+.job-description {
+    font-size: 14px;
+    color: #444;
+    margin: 10px 0;
+    line-height: 1.6;
+}
+</style>
+<div class="dashboard-container">
+
+    <!-- HEADER -->
+    <h2 class="dashboard-title">🎓 Student Dashboard</h2>
+    <p class="welcome-text">
+        Welcome, <strong> {{ student.full_name|default:student.user.username }}</strong>
+    </p>
+
+    <!-- ================= RESUME WARNING ================= -->
+    {% if warning %}
+    <div class="warning-box">
+        <h3>⚠ Resume Verification Failed</h3>
+        <p>{{ warning }}</p>
+        <p class="warning-note">
+            ❌ Job recommendations are temporarily blocked.<br>
+            👉 Please upload an original resume.
+        </p>
+
+        <a href="{% url 'upload_resume' %}">
+            <button class="danger-btn">
+                📤 Re-Upload Resume
+            </button>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- ================= RECOMMENDED JOBS ================= -->
+    <h3 class="section-title">
+        🤖 Recommended Jobs (Based on Your Resume)
+    </h3>
+
+    <div class="job-grid">
+
+        {% for job in recommended_jobs %}
+        <div class="job-card">
+
+            <h4>{{ job.title }}</h4>
+            <p class="company">
+                🏢 {{ job.employer.company_name }}
+            </p>
+
+            <p class="job-meta">📍 {{ job.location }}</p>
+            <p>📝 <strong>Job Description:</strong><br>{{ job.clean_description }}</p>
+            <p>💼<strong>Job Type:</strong> {{ job.job_type }}</p>
+            <p>🏢 <strong>Work Mode:</strong> {{ job.work_mode }}</p>
+            <p class="job-meta">💰 {{ job.salary }}</p>
+
+            <div class="skills">
+                <strong>Matched Skills:</strong><br>
+                {% for skill in job.matched_skills %}
+                    <span class="skill-tag">✓ {{ skill }}</span>
+                {% empty %}
+                    <span class="no-skill">No matched skills</span>
+                {% endfor %}
+            </div>
+
+            <a href="{% url 'apply_job' job.id %}">
+                <button class="apply-btn">
+                    Apply (Recommended)
+                </button>
+            </a>
+
+        </div>
+        {% empty %}
+            <p class="muted-text">No recommended jobs found.</p>
+        {% endfor %}
+
+    </div>
+
+    {% if not warning and not recommended_jobs %}
+        <p class="muted-text">
+            No strong job matches found for your resume yet.
+        </p>
+    {% endif %}
+
+    <!-- ================= APPLIED JOBS ================= -->
+    <h3 class="section-title">✅ Applied Jobs</h3>
+
+    {% if applied_jobs %}
+    <div class="applied-list">
+        {% for application in applied_jobs %}
+        <div class="applied-card">
+
+            <strong>{{ application.job.title }}</strong>
+            – {{ application.job.employer.company_name }} <br>
+
+            🗓 Applied on:
+            {{ application.applied_date|date:"d M Y" }} <br>
+
+            📌 Status:
+            {% if application.status == "approved" %}
+                <span class="status approved">✔ Approved</span>
+            {% elif application.status == "rejected" %}
+                <span class="status rejected">✖ Rejected</span>
+            {% else %}
+                <span class="status pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="muted-text">You have not applied for any jobs yet.</p>
+    {% endif %}
+
+    <!-- ================= LEGEND ================= -->
+    <div class="legend">
+        <h4>Application Status Guide</h4>
+        <ul>
+            <li><span class="pending">⏳ Pending</span> – Employer has not reviewed yet</li>
+            <li><span class="approved">✔ Approved</span> – Shortlisted / Selected</li>
+            <li><span class="rejected">✖ Rejected</span> – Not selected</li>
+        </ul>
+    </div>
+
+</div>
+
+{% endblock %}

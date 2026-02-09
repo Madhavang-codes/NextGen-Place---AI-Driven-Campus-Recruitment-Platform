@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Available Jobs & Internships</h2>
+
+{% for job in jobs %}
+<div class="card">
+    <h3>{{ job.title }}</h3>
+    <p><strong>Company:</strong> {{ job.employer.company_name }}</p>
+    <p><strong>Job Description:</strong><br>{{ job.clean_description }}</p>
+    <p><strong>Job Type:</strong> {{ job.job_type }}</p>
+    <p> <strong>Work Mode:</strong> {{ job.work_mode }}</p>
+    <p><strong>Skills:</strong> {{ job.skills_required }}</p>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+    <p><strong>Salary:</strong> {{ job.salary }}</p>
+    <a href="{% url 'apply_job' job.id %}" class="btn btn-primary">
+        Apply Now
+    </a>
+</div>
+{% endfor %}
+
+{% endblock %}

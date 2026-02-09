@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== Global ===== */
+.admin-container {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    padding: 20px;
+}
+
+.admin-container h2 {
+    font-size: 28px;
+    color: #0d47a1;
+    margin-bottom: 20px;
+}
+
+.admin-container h3 {
+    margin-top: 35px;
+    margin-bottom: 15px;
+    color: #1565c0;
+}
+
+/* ===== Summary Cards ===== */
+.summary-cards {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    flex: 1;
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+}
+
+.summary-card h4 {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.summary-card p {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* ===== Status Boxes ===== */
+.status-boxes {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.status {
+    flex: 1;
+    padding: 18px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.status.approved { background: #e8f5e9; color: #2e7d32; }
+.status.rejected { background: #fdecea; color: #c62828; }
+.status.pending  { background: #fff8e1; color: #ef6c00; }
+
+/* ===== Analytics Boxes ===== */
+.analytics-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+.analytics-box ul {
+    padding-left: 18px;
+}
+
+.analytics-box li {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+/* ===== Tables ===== */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-table thead {
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: #ffffff;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 14px 12px;
+    font-size: 14px;
+    border: 1px solid #d0d7de;
+}
+
+.admin-table tbody tr:nth-child(even) {
+    background: #f9fbff;
+}
+
+.admin-table tbody tr:hover {
+    background: #e3f2fd;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #d32f2f;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="admin-container">
+
+<h2>📊 Admin Analytics Dashboard</h2>
+
+<!-- ================= SUMMARY ================= -->
+<div class="summary-cards">
+    <div class="summary-card">
+        <h4>👥 Total Users</h4>
+        <p>{{ total_users }}</p>
+    </div>
+    <div class="summary-card">
+        <h4>💼 Total Jobs</h4>
+        <p>{{ total_jobs }}</p>
+    </div>
+    <div class="summary-card">
+        <h4>📄 Total Applications</h4>
+        <p>{{ total_applications }}</p>
+    </div>
+</div>
+
+<!-- ================= STATUS ================= -->
+<h3>📌 Application Status Summary</h3>
+<div class="status-boxes">
+    <div class="status approved">✅ Approved<br>{{ approved_count }}</div>
+    <div class="status rejected">❌ Rejected<br>{{ rejected_count }}</div>
+    <div class="status pending">⏳ Pending<br>{{ pending_count }}</div>
+</div>
+
+<!-- ================= DEPARTMENT ================= -->
+<h3>🏫 Department-wise Placement Statistics</h3>
+
+<table class="admin-table">
+<thead>
+<tr>
+    <th>Department</th>
+    <th>Total Students</th>
+    <th>Approved</th>
+    <th>Rejected</th>
+    <th>Success %</th>
+</tr>
+</thead>
+<tbody>
+{% for dept in department_stats %}
+<tr>
+    <td>{{ dept.department }}</td>
+    <td>{{ dept.student_count }}</td>
+    <td style="color:#2e7d32; font-weight:bold;">
+        {{ dept.approved_count }}
+    </td>
+    <td style="color:#c62828; font-weight:bold;">
+        {{ dept.rejected_count }}
+    </td>
+    <td>
+        {{ dept.success_percentage }}%
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" style="text-align:center; color:gray;">
+        No department data available
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+<!-- ================= EMPLOYER COUNTS (NEW) ================= -->
+<h3>🏭 Employer Statistics</h3>
+<div class="analytics-box">
+<ul>
+    <li><strong>Total Registered Employers:</strong> {{ employers|length }}</li>
+</ul>
+</div>
+
+<!-- ================= TOP COMPANIES ================= -->
+<h3>🏢 Top Companies by Job Posts</h3>
+<div class="analytics-box">
+<ul>
+{% for company in top_companies %}
+    <li>
+        <strong>{{ company.employer__company_name|default:"Unknown Company" }}</strong>
+        — {{ company.job_count }} job{{ company.job_count|pluralize }}
+    </li>
+{% empty %}
+    <li style="color:gray;">No job postings yet</li>
+{% endfor %}
+</ul>
+</div>
+
+<!-- ================= TOP SKILLS ================= -->
+<h3>🧠 Top In-Demand Skills</h3>
+<div class="analytics-box">
+<ul>
+{% for skill, count in top_skills %}
+    <li><strong>{{ skill|title }}</strong> — {{ count }} job{{ count|pluralize }}</li>
+{% empty %}
+    <li style="color:gray;">No skill data available</li>
+{% endfor %}
+</ul>
+</div>
+
+<!-- ================= STUDENTS TABLE ================= -->
+<h3>🎓 Registered Students</h3>
+<table class="admin-table">
+<thead>
+<tr>
+    <th>Username</th>
+    <th>Full Name</th>
+    <th>Register No</th>
+    <th>Department</th>
+    <th>Email</th>
+    <th>Register Date</th>
+    <th>Action</th>
+</tr>
+</thead>
+<tbody>
+{% for student in students %}
+<tr>
+    <td>{{ student.user.username }}</td>
+    <td>{{ student.full_name|default:"—" }}</td>
+    <td>{{ student.register_number|default:"—" }}</td>
+    <td>{{ student.department|default:"—" }}</td>
+    <td>{{ student.student_email|default:"—" }}</td>
+    <td>{{ student.user.date_joined|date:"d M Y" }}</td>
+    <td>
+        <form method="post" action="{% url 'confirm_delete_student' student.user.id %}">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">🗑 Delete</button>
+        </form>
+    </td>
+</tr>
+{% empty %}
+<tr><td colspan="7" style="text-align:center;">No students registered</td></tr>
+{% endfor %}
+</tbody>
+</table>
+
+<!-- ================= EMPLOYERS TABLE ================= -->
+<h3>🏭 Registered Companies</h3>
+<table class="admin-table">
+<thead>
+<tr>
+    <th>Company Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Location</th>
+    <th>Register Date</th>
+    <th>Action</th>
+</tr>
+</thead>
+<tbody>
+{% for employer in employers %}
+<tr>
+    <td>{{ employer.company_name }}</td>
+    <td>{{ employer.company_email }}</td>
+    <td>{{ employer.phone_number }}</td>
+    <td>{{ employer.location|default:"—" }}</td>
+    <td>{{ employer.created_at|date:"d M Y" }}</td>
+    <td>
+        <form method="post" action="{% url 'delete_employer' employer.user.id %}">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">🗑 Delete</button>
+        </form>
+    </td>
+</tr>
+{% empty %}
+<tr><td colspan="6" style="text-align:center;">No companies registered</td></tr>
+{% endfor %}
+</tbody>
+</table>
+
+</div>
+{% endblock %}

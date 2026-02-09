@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ================= EMPLOYER DASHBOARD LAYOUT ================= */
+.dashboard-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    color: #0d47a1;
+    margin-bottom: 5px;
+}
+
+.dashboard-welcome {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* ================= ACTION BAR ================= */
+.action-bar {
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+/* ================= SECTION TITLE ================= */
+.section-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #1976d2;
+}
+
+/* ================= JOB CARDS ================= */
+.jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.job-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+/* Blue top accent */
+.job-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #1976d2, #42a5f5);
+    border-radius: 14px 14px 0 0;
+}
+
+.job-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+}
+
+.job-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #0d47a1;
+}
+
+.job-card p {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+/* ================= BUTTONS ================= */
+.job-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-outline {
+    border: 2px solid #1976d2;
+    color: #1976d2;
+    padding: 8px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: #1976d2;
+    color: white;
+}
+
+/* DELETE BUTTON */
+.btn-delete {
+    background: #fdecea;
+    color: #c62828;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: #f44336;
+    color: white;
+}
+
+/* ================= EMPTY ================= */
+.empty-text {
+    color: #777;
+    font-style: italic;
+}
+</style>
+
+<div class="dashboard-container">
+
+    <!-- ================= HEADER ================= -->
+    <h2 class="dashboard-title">🏢 Employer Dashboard</h2>
+    <p class="dashboard-welcome">
+        Welcome, <strong>{{ request.user.username }}</strong>
+    </p>
+
+    <!-- ================= POST JOB ================= -->
+    <div class="action-bar">
+        <a href="{% url 'post_job' %}" class="btn-primary">
+            ➕ Post New Job
+        </a>
+    </div>
+
+    <!-- ================= POSTED JOBS ================= -->
+    <h3 class="section-title">📋 Your Posted Jobs</h3>
+
+    {% if jobs %}
+        <div class="jobs-grid">
+            {% for job in jobs %}
+                <div class="job-card">
+
+                    <h4 class="job-title">💼 {{ job.title }}</h4>
+
+                    <p>
+                        🏢 <strong>Company:</strong> {{ job.employer.company_name }}<br>
+                        📍 <strong>Location:</strong> {{ job.location }}<br>
+                        💰 <strong>Salary:</strong> {{ job.salary }}
+                    </p>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="job-actions">
+                        <a href="{% url 'view_applicants' job.id %}" class="btn-outline">
+                            👨‍🎓 View Applicants
+                        </a>
+
+                        <form method="post" action="{% url 'delete_job' job.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn-delete"
+                                    onclick="return confirm('Are you sure you want to delete this job?');">
+                                🗑 Delete
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-text">🚫 No jobs posted yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
