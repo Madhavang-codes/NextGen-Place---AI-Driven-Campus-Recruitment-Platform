@@ -65,3 +65,48 @@ python manage.py runserver
 
 **Madhavan**  
 MCA Student | Aspiring Backend Developer
+
+## 📸 Application Screenshots
+
+### 🏠 Home & Authentication
+<p align="center">
+  <img src="screenshots/Home.png" width="45%" />
+  <img src="screenshots/login_page.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/Register_page.png" width="45%" />
+</p>
+
+---
+
+### 🎓 Student Module
+<p align="center">
+  <img src="screenshots/Student_Verify.jpg" width="45%" />
+  <img src="screenshots/Student_Dashboard.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/upload-resume.png" width="45%" />
+  <img src="screenshots/Job_list.png" width="45%" />
+</p>
+
+---
+
+### 🏢 Employer Module
+<p align="center">
+  <img src="screenshots/Employer_profile.png" width="45%" />
+  <img src="screenshots/Employer_Dashboard.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/jobs_posts.png" width="45%" />
+  <img src="screenshots/Applicants.jpg" width="45%" />
+</p>
+
+---
+
+### 🛠 Admin Panel
+<p align="center">
+  <img src="screenshots/Admin_Dashboard.png" width="60%" />
+</p>
